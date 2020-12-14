@@ -34,7 +34,7 @@ jobs:
     - name: Boost Prerequisites
       if: steps.cache-boost.outputs.cache-hit != 'true'
       run: |
-        wget https://sourceforge.net/projects/boost/files/boost/${{ env.external_version }}/${{ env.external_name}}.tar.gz/download
+        wget -nv https://sourceforge.net/projects/boost/files/boost/${{ env.external_version }}/${{ env.external_name}}.tar.gz/download
         tar xf download
         pushd ${{ env.external_name }}
         ./bootstrap.sh
@@ -48,8 +48,8 @@ jobs:
 
     - name: OS Prerequisites
       run: |
-        sudo apt update
-        sudo apt install \
+        sudo apt-get update
+        sudo apt-get install -y \
           gcc \
           g++ \
           clang \
@@ -67,7 +67,7 @@ jobs:
     - name: Faber Setup
       run: |
         python3 -m pip install setuptools
-        python3 -m pip install Faber
+        python3 -m pip install faber
         sed -e "s/\$PYTHON/$PYTHON/g" .ci/faber > ~/.faber
 
     - name: Test
