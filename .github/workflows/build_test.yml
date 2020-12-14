@@ -65,17 +65,19 @@ jobs:
           python-sphinx \
           python-docutils
 
-    - name: Faber Setup
+    - name: Faber Install
       run: |
         python3 -m pip install setuptools
         python3 -m pip install faber
-        sed -e "s/${{ matrix.python }}/$PYTHON/g" .ci/faber > ~/.faber
+        faber -v
 
     - name: Test
       run: |
         ${{ matrix.python }} --version
-        faber -h
+        faber -v
         ls -l ${{ env.external_path }}
+
+        sed -e "s/${{ matrix.python }}/$PYTHON/g" .ci/faber > ~/.faber
         
         faber \
           --with-boost-include=${{ env.external_path }} \
