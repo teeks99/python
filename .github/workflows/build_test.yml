@@ -49,7 +49,7 @@ jobs:
 
     - name: OS Prerequisites
       run: |
-      sudo apt update
+      sudo apt update ; \
       sudo apt install \
         gcc \
         g++ \
