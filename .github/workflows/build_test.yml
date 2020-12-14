@@ -21,6 +21,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - uses: actions/setup-python@v2
+      name: Python Tools Version
+      with:
+        python-version: '3.x'
+
     - name: Cache Boost Version
       id: cache-boost
       uses: actions/cache@v2
@@ -53,33 +58,31 @@ jobs:
           gcc \
           g++ \
           clang \
-          python3-pip \
           python3-numpy \
           python3-dev \
-          python3-wheel \
           python-numpy \
           python-dev \
           libboost-all-dev \
           xsltproc \
-          docbook-xsl \
-          python-sphinx \
-          python-docutils
+          docbook-xsl
 
-    - name: Faber Install
+    - name: Python Tools
       run: |
-        python3 -m pip install setuptools
-        python3 -m pip install faber
-        python3 -m faber -v
+        pip install setuptools
+        pip install wheel
+        pip install sphinx
+        pip install docutils
+        pip install faber
 
     - name: Test
       run: |
         ${{ matrix.python }} --version
-        python3 -m faber -v
+        faber -v
         ls -l ${{ env.external_path }}
 
         sed -e "s/${{ matrix.python }}/$PYTHON/g" .ci/faber > ~/.faber
         
-        python3 -m faber \
+        faber \
           --with-boost-include=${{ env.external_path }} \
           --builddir=build test.report \
           cxx.name=${{ matrix.cxx }} \
