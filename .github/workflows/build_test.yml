@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         python: [ python, python3 ]
-        cxx: [ g++, clang ]
+        cxx: [ g++, clang++ ]
         std: [ c++98, c++11]
 
     steps:
