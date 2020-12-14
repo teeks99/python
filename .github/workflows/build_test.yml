@@ -68,11 +68,11 @@ jobs:
       run: |
         python3 -m pip install setuptools
         python3 -m pip install faber
-        sed -e "s/\$PYTHON/$PYTHON/g" .ci/faber > ~/.faber
+        sed -e "s/${{ env.python }}/$PYTHON/g" .ci/faber > ~/.faber
 
     - name: Test
       run: |
-        $PYTHON --version
+        ${{ env.python }} --version
         faber -h
         ls -l ${{ env.external_path }}
         
