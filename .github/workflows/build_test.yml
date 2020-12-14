@@ -49,22 +49,22 @@ jobs:
 
     - name: OS Prerequisites
       run: |
-      sudo apt update ; \
-      sudo apt install \
-        gcc \
-        g++ \
-        clang \
-        pypy3-dev
-        python3-pip \
-        python3-numpy \
-        python3-dev \
-        python-numpy \
-        python-dev \
-        libboost-all-dev \
-        xsltproc \
-        docbook-xsl \
-        python-sphinx \
-        python-docutils
+        sudo apt update
+        sudo apt install \
+          gcc \
+          g++ \
+          clang \
+          pypy3-dev
+          python3-pip \
+          python3-numpy \
+          python3-dev \
+          python-numpy \
+          python-dev \
+          libboost-all-dev \
+          xsltproc \
+          docbook-xsl \
+          python-sphinx \
+          python-docutils
 
     - name: Faber Setup
       run: |
