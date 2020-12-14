@@ -40,7 +40,6 @@ jobs:
         ./bootstrap.sh
         ./b2 tools/bcp
         mkdir -p ${{ env.external_path }}
-        # Install Boost.Python prerequisites, but not Boost.Python itself.
         dist/bin/bcp python tools/boostbook tools/quickbook ${{ env.external_path }} &> /dev/null
         popd
 
