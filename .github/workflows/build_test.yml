@@ -80,7 +80,7 @@ jobs:
         faber -v
         ls -l ${{ env.external_path }}
 
-        sed -e "s/${{ matrix.python }}/$PYTHON/g" .ci/faber > ~/.faber
+        sed -e "s/\$PYTHON/${{ matrix.python }}/g" .ci/faber > ~/.faber
         
         faber \
           --with-boost-include=${{ env.external_path }} \
