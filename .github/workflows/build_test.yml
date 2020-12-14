@@ -69,17 +69,17 @@ jobs:
       run: |
         python3 -m pip install setuptools
         python3 -m pip install faber
-        faber -v
+        python3 -m faber -v
 
     - name: Test
       run: |
         ${{ matrix.python }} --version
-        faber -v
+        python3 -m faber -v
         ls -l ${{ env.external_path }}
 
         sed -e "s/${{ matrix.python }}/$PYTHON/g" .ci/faber > ~/.faber
         
-        faber \
+        python3 -m faber \
           --with-boost-include=${{ env.external_path }} \
           --builddir=build test.report \
           cxx.name=${{ matrix.cxx }} \
