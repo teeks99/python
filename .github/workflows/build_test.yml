@@ -56,6 +56,7 @@ jobs:
           python3-pip \
           python3-numpy \
           python3-dev \
+          python3-wheel \
           python-numpy \
           python-dev \
           libboost-all-dev \
