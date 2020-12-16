@@ -12,7 +12,7 @@ jobs:
 
     runs-on: ubuntu-20.04
     container: ubuntu:20.04
-    
+
     strategy:
       matrix:
         python: [ python, python3 ]
@@ -37,21 +37,6 @@ jobs:
         path: ${{ env.external_path }}
         key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.external_version}}
 
-    - name: Boost Prerequisites
-      if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: |
-        wget -nv https://sourceforge.net/projects/boost/files/boost/${{ env.external_version }}/${{ env.external_name}}.tar.gz/download
-        tar xf download
-        pushd ${{ env.external_name }}
-        ./bootstrap.sh
-        ./b2 tools/bcp
-        mkdir -p ${{ env.external_path }}
-        dist/bin/bcp python tools/boostbook tools/quickbook ${{ env.external_path }} &> /dev/null
-        popd
-
-    - name: Clear Boost Python
-      run: rm -rf ${{ env.external_path }}/boost/python
-
     - name: OS Prerequisites
       run: |
         sudo apt-get update
@@ -69,20 +54,37 @@ jobs:
           python3 \
           python3-numpy \
           python3-dev \
+          python3-pip \
           python \
           python-numpy \
           python-dev \
           libboost-all-dev \
           xsltproc \
-          docbook-xsl
+          docbook-xsl \
+          wget
+
+    - name: Boost Prerequisites
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      run: |
+        wget -nv https://sourceforge.net/projects/boost/files/boost/${{ env.external_version }}/${{ env.external_name}}.tar.gz/download
+        tar xf download
+        pushd ${{ env.external_name }}
+        ./bootstrap.sh
+        ./b2 tools/bcp
+        mkdir -p ${{ env.external_path }}
+        dist/bin/bcp python tools/boostbook tools/quickbook ${{ env.external_path }} &> /dev/null
+        popd
+
+    - name: Clear Boost Python
+      run: rm -rf ${{ env.external_path }}/boost/python
 
     - name: Python Tools
       run: |
-        pip install setuptools
-        pip install wheel
-        pip install sphinx
-        pip install docutils
-        pip install faber
+        python3 -m pip install setuptools
+        python3 -m pip install wheel
+        python3 -m pip install sphinx
+        python3 -m pip install docutils
+        python3 -m pip install faber
 
     - name: Test
       run: |
