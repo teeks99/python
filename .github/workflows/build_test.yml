@@ -40,13 +40,7 @@ jobs:
     - name: OS Prerequisites
       run: |
         apt-get update
-        apt-get purge -y \
-          python3 \
-          python3-numpy \
-          python3-dev \
-          python \
-          python-numpy \
-          python-dev 
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
         apt-get install -y \
           gcc \
           g++ \
