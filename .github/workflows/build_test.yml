@@ -62,12 +62,11 @@ jobs:
       run: |
         wget -nv https://sourceforge.net/projects/boost/files/boost/${{ env.external_version }}/${{ env.external_name}}.tar.gz/download
         tar xf download
-        pushd ${{ env.external_name }}
+        cd ${{ env.external_name }}
         ./bootstrap.sh
         ./b2 tools/bcp
         mkdir -p ${{ env.external_path }}
         dist/bin/bcp python tools/boostbook tools/quickbook ${{ env.external_path }} &> /dev/null
-        popd
 
     - name: Clear Boost Python
       run: rm -rf ${{ env.external_path }}/boost/python
