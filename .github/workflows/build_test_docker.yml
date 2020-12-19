@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test - Linux Docker
 
 on:  [ push, pull_request ]
 
