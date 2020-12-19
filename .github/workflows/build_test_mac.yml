@@ -46,7 +46,7 @@ jobs:
         mv ${{ env.release_file }} ${{ env.BOOST_SRC }}
         cd ${{ env.BOOST_SRC }}
         ./bootstrap.sh
-        ./b2 tools/bcp
+        ./b2 toolset=gcc-9 tools/bcp
         mkdir -p ${{ env.BOOST_PY_DEPS }}
         dist/bin/bcp python tools/boostbook tools/quickbook ${{ env.BOOST_PY_DEPS }} &> /dev/null
 
