@@ -1,0 +1,71 @@
+name: Build and Test
+
+on:  [ push, pull_request ]
+
+env:
+  # Version of Boost used for dependencies
+  external_version: 1.66.0
+  release_file: boost_1_66_0
+  # Locations of boost: dependencies and full source in the image
+  BOOST_PY_DEPS: ~/boost_py_deps
+  BOOST_SRC: ~/boost_src
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        python: [ python ]
+        cxx: [ clang++ ]
+        std: [ c++11]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache Boost Version
+      id: cache-boost
+      uses: actions/cache@v2
+      env:
+        cache-name: external-boost
+
+      with:
+        path: |
+          ${{ env.BOOST_PY_DEPS }}
+          ${{ env.BOOST_SRC }}
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.external_version}}
+
+    - name: Boost Prerequisites
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      # Get a pre-defined version of boost from sourceforge and grab the dependencies of boost::python
+      run: |
+        wget -O ${{ env.release_file }}.tar.gz -nv https://sourceforge.net/projects/boost/files/boost/${{ env.external_version }}/${{ env.release_file}}.tar.gz/download
+        tar xf ${{ env.release_file }}.tar.gz
+        rm ${{ env.release_file }}.tar.gz
+        mv ${{ env.release_file }} ${{ env.BOOST_SRC }}
+        cd ${{ env.BOOST_SRC }}
+        ./bootstrap.sh
+        ./b2 tools/bcp
+        mkdir -p ${{ env.BOOST_PY_DEPS }}
+        dist/bin/bcp python tools/boostbook tools/quickbook ${{ env.BOOST_PY_DEPS }} &> /dev/null
+
+    - name: Clear Boost Python
+      # The bcp that was run to get the dependencies includes the python lib, remove that.
+      run: rm -rf ${{ env.BOOST_PY_DEPS }}/boost/python
+
+    - name: Setup Faber
+      run: |
+        python3 -m pip install setuptools
+        python3 -m pip install wheel
+        python3 -m pip install faber
+
+    - name: Test
+      run: |
+        ${{ matrix.python }} --version
+        ${{ matrix.cxx }} --version
+        faber -v
+        ls -l ${{ env.BOOST_PY_DEPS }}
+
+        sed -e "s/\$PYTHON/${{ matrix.python }}/g" .ci/faber > ~/.faber
+        
