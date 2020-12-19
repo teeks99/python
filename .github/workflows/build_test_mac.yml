@@ -74,4 +74,4 @@ jobs:
           --builddir=build test.report \
           cxx.name=${{ matrix.cxx }} \
           cxxflags=-std=${{ matrix.std }} \
-          -j8
+          -j`nproc`
